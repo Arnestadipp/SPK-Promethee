@@ -18,7 +18,6 @@
 	<thead>
 		<tr align="center">
 			<th>Alternatif</th>
-			<th>Alamat</th>
 			<th>Nilai</th>
 			<th width="15%">Ranking</th>
 		</tr>
@@ -33,12 +32,6 @@
 				$nama_alternatif = $this->Perhitungan_model->get_hasil_alternatif($keys->id_alternatif);
 				echo $nama_alternatif['nama'];
 				?>
-			<td align="left">
-				<?php
-				$alamat = $this->Perhitungan_model->get_hasil_alternatif($keys->id_alternatif);
-				echo $alamat['alamat'];
-				?>
-			</td>
 			</td>
 			<td><?= $keys->nilai ?></td>
 			<td><?= $no; ?></td>
