@@ -22,7 +22,7 @@
     <body class="bg-gradient-danger">
         <nav class="navbar navbar-expand-lg navbar-dark bg-white shadow-lg pb-3 pt-3 font-weight-bold">
             <div class="container">
-                <a class="navbar-brand text-danger" style="font-weight: 900;" href="<?= base_url('')?>"> <i class=""></i> SPK SELEKSI CALON ANAK ASUH BARU LKSA AL IKHLAS</a>
+                <a class="navbar-brand text-danger" style="font-weight: 900;" href="<?= base_url('')?>"> <i class=""></i> SPK PENENTUAN PRIORITAS PEMBANGUNAN KECAMATAN</a>
             </div>
         </nav>
 
@@ -32,12 +32,12 @@
 				<div class="col-xl-6 col-lg-6 col-md-6 mt-5">
                     <div class="card bg-none o-hidden border-0 my-5 text-white" style="background: none;">
                         <div class="text-justify card-body p-0">
-                            <h4 style="font-weight: 800;">Sistem Pendukung Keputusan Seleksi Calon Anak Asuh LKSA</h4>
+                            <h4 style="font-weight: 800;">Sistem Pendukung Keputusan Penentuan Prioritas Pembangunan Kecamatan</h4>
                             <p class="pt-4">
-                                Sistem Pendukung Keputusan (SPK) merupakan suatu sistem interatif yang mendukung keputusan dalam proses pengambilan keputusan melalui alternatif-alternatif yang diperoleh dari hasil pengolahan data.
+                                Sistem Pendukung Keputusan (SPK) merupakan sistem berbasis komputer yang digunakan untuk membantu proses pengambilan keputusan secara objektif melalui pengolahan dan analisis data.
                             </p>
                             <p>
-                            Lembaga Kesejahteraan Sosial Anak (LKSA) Memberikan perlindungan terhadap hak anak-anak sebagai wakil orang tua dalam memenuhi kebutuhan mental dan sosial pada anak asuh agar mereka memiliki kesempatan untuk mengembangkan diri.
+                            Sistem ini dirancang untuk menentukan prioritas pembangunan kecamatan di Kabupaten Bantul berdasarkan indikator kesejahteraan menggunakan metode PROMETHEE. Melalui proses perhitungan dan perangkingan, sistem dapat membantu memberikan rekomendasi kecamatan yang lebih diprioritaskan dalam pembangunan secara efektif, terstruktur, dan terukur.
                             </p>
                         </div>
                     </div>

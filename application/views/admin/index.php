@@ -10,7 +10,7 @@
     <!-- Content Row -->
     <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        Selamat datang <span class="text-uppercase"><b><?= $this->session->username; ?>!</b></span> di Sitem pendukung Keputusan Seleksi Calon Anak Asuh LKSA Al Ikhlas
+        Selamat datang <span class="text-uppercase"><b><?= $this->session->username; ?>!</b></span> di Sitem pendukung Keputusan Penentuan Prioritas Pembangunan Kecamatan
     </div>
     <div class="row">
 		
@@ -116,7 +116,7 @@
     <!-- Content Row -->
     <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        Selamat datang <span class="text-uppercase"><b><?= $this->session->username; ?>!</b></span> di Sitem pendukung Keputusan Seleksi Calon Anak Asuh LKSA Al Ikhlas
+        Selamat datang <span class="text-uppercase"><b><?= $this->session->username; ?>!</b></span> di Sitem pendukung Keputusan Penentuan Prioritas Pembangunan Kecamatan
     </div>
     <div class="row">
 		
