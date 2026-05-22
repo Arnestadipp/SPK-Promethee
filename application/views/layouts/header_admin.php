@@ -91,6 +91,18 @@ if($this->session->status !== ('Logged'))
 
         </li>
 
+        <!-- Asli -->
+        <li class="nav-item <?php if($page=='Asli'){echo 'active';}?>">
+
+            <a class="nav-link" href="<?= base_url('Asli'); ?>">
+
+                <i class="fas fa-fw fa-users"></i>
+                <span>Data Asli</span>
+
+            </a>
+
+        </li>
+
         <!-- Alternatif -->
         <li class="nav-item <?php if($page=='Alternatif'){echo 'active';}?>">
 

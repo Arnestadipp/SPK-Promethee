@@ -96,36 +96,121 @@ foreach ($kriteria as $r) { ?>
 
 								$data_pencocokan1 = $this->Perhitungan_model->data_nilai($a1->id_alternatif, $r->id_kriteria);
 								$data_pencocokan2 = $this->Perhitungan_model->data_nilai($a2->id_alternatif, $r->id_kriteria);
+								
 								$nilai1 = isset($data_pencocokan1['nilai']) ? $data_pencocokan1['nilai'] : 0;
 								$nilai2 = isset($data_pencocokan2['nilai']) ? $data_pencocokan2['nilai'] : 0;
 
 								$d1 = $nilai1 - $nilai2;
 								$d2 = $nilai2 - $nilai1;
 
-								if ($d1 <= "0") {
-									$p1 = "0";
-								} else {
-									$p1 = "1";
+								/*
+								|--------------------------------------------------------------------------
+								| Menentukan nilai q dan p berdasarkan kriteria
+								|--------------------------------------------------------------------------
+								*/
+
+								switch ($r->kode_kriteria) {
+
+									case 'C1':
+										$q = 0.280;
+										$p = 1.398;
+										break;
+
+									case 'C2':
+										$q = 0.019;
+										$p = 0.094;
+										break;
+
+									case 'C3':
+										$q = 0.108;
+										$p = 0.500;
+										break;
+
+									case 'C4':
+										$q = 0.073;
+										$p = 0.367;
+										break;
+
+									case 'C5':
+										$q = 0.001;
+										$p = 0.005;
+										break;
+
+									case 'C6':
+										$q = 0.027;
+										$p = 0.151;
+										break;
+
+									case 'C7':
+										$q = 0.308;
+										$p = 1.539;
+										break;
+
+									case 'C8':
+										$q = 0.010;
+										$p = 0.051;
+										break;
+
+									case 'C9':
+										$q = 0.019;
+										$p = 0.093;
+										break;
+
+									case 'C10':
+										$q = 0.030;
+										$p = 0.150;
+										break;
+
+									default:
+										$q = 0;
+										$p = 1;
+										break;
 								}
-								if ($d2 <= "0") {
-									$p2 = "0";
+
+								/*
+								|--------------------------------------------------------------------------
+								| Fungsi Preferensi Tipe V
+								| Preferensi A1 terhadap A2
+								|--------------------------------------------------------------------------
+								*/
+
+								if ($d1 <= $q) {
+									$p1 = 0;
+								} elseif ($d1 <= $p) {
+									$p1 = ($d1 - $q) / ($p - $q);
 								} else {
-									$p2 = "1";
+									$p1 = 1;
+								}
+
+								/*
+								|--------------------------------------------------------------------------
+								| Fungsi Preferensi Tipe V
+								| Preferensi A2 terhadap A1
+								|--------------------------------------------------------------------------
+								*/
+
+								if ($d2 <= $q) {
+									$p2 = 0;
+								} elseif ($d2 <= $p) {
+									$p2 = ($d2 - $q) / ($p - $q);
+								} else {
+									$p2 = 1;
 								}
 								echo "		
 								<tr align='center'>
 									<td>[$a1->kode_alternatif] $a1->nama</td>
 									<td>[$a2->kode_alternatif] $a2->nama</td>
-									<td>" . $nilai2 . "</td>
 									<td>" . $nilai1 . "</td>
+									<td>" . $nilai2 . "</td>
 									<td>$d1</td>
 									<td>" . $p1 . "</td>
 								</tr>
+
 								<tr align='center'>
 									<td>[$a2->kode_alternatif] $a2->nama</td>
 									<td>[$a1->kode_alternatif] $a1->nama</td>
-									<td>" . $data_pencocokan2['nilai'] . "</td>
-									<td>" . $data_pencocokan1['nilai'] . "</td>
+									<td>" . $nilai2 . "</td>
+									<td>" . $nilai1 . "</td>
 									<td>$d2</td>
 									<td>" . $p2 . "</td>
 								</tr>";
