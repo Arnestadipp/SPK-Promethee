@@ -1,5 +1,4 @@
 <?php
-
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Penilaian extends CI_Controller
@@ -8,97 +7,83 @@ class Penilaian extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->library('pagination');
-        $this->load->library('form_validation');
-        $this->load->model('Penilaian_model');
 
-        if ($this->session->userdata('id_user_level') != "1")
-            if ($this->session->userdata('id_user_level') != "3") {
-                ?>
-                <script type="text/javascript">
-                    alert('Anda tidak berhak mengakses halaman ini!');
-                    window.location = '<?php echo base_url("Login/home"); ?>'
-                </script>
-                <?php
-            }
+        $this->load->model('Penilaian_model');
+        $this->load->model('Kriteria_model');
     }
+
+    /*
+    =====================================
+    HALAMAN PENILAIAN
+    =====================================
+    */
 
     public function index()
     {
-        $data = [
-            'page' => "Penilaian",
-            'list' => $this->Penilaian_model->tampil(),
-            'kriteria' => $this->Penilaian_model->get_kriteria(),
-            'alternatif' => $this->Penilaian_model->get_alternatif(),
-            'sub_kriteria' => $this->Penilaian_model->get_sub_kriteria(),
-            'perhitungan' => $this->Penilaian_model->tampil()
-        ];
+        $data['alternatif'] = $this->db
+            ->order_by('id_asli', 'ASC')
+            ->get('asli')
+            ->result();
+
+        $data['kriteria'] = $this->Kriteria_model
+            ->tampil();
+
         $this->load->view('penilaian/index', $data);
     }
 
+    /*
+    =====================================
+    SIMPAN PENILAIAN
+    =====================================
+    */
 
     public function tambah_penilaian()
     {
         $id_alternatif = $this->input->post('id_alternatif');
+
         $id_kriteria = $this->input->post('id_kriteria');
+
         $nilai = $this->input->post('nilai');
-        $i = 0;
-        echo var_dump($nilai);
-        foreach ($nilai as $key) {
 
-            $key = str_replace(',', '.', $key);
+        for ($i = 0; $i < count($id_kriteria); $i++) {
 
-            $this->Penilaian_model->tambah_penilaian(
-                $id_alternatif,
-                $id_kriteria[$i],
-                $key
-            );
+            $data = [
+                'id_alternatif' => $id_alternatif,
+                'id_kriteria' => $id_kriteria[$i],
+                'nilai' => $nilai[$i]
+            ];
 
-            $i++;
+            $this->db->insert('penilaian', $data);
         }
-        $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data berhasil disimpan!</div>');
-        redirect('penilaian');
+
+        redirect('Penilaian');
     }
 
-
+    /*
+    =====================================
+    UPDATE PENILAIAN
+    =====================================
+    */
 
     public function update_penilaian()
     {
         $id_alternatif = $this->input->post('id_alternatif');
+
         $id_kriteria = $this->input->post('id_kriteria');
+
         $nilai = $this->input->post('nilai');
-        $i = 0;
 
-        foreach ($nilai as $key) {
+        for ($i = 0; $i < count($id_kriteria); $i++) {
 
-            $key = str_replace(',', '.', $key);
+            $this->db->where('id_alternatif', $id_alternatif);
 
-            $cek = $this->Penilaian_model->data_penilaian(
-                $id_alternatif,
-                $id_kriteria[$i]
-            );
+            $this->db->where('id_kriteria', $id_kriteria[$i]);
 
-            if ($cek == 0) {
-
-                $this->Penilaian_model->tambah_penilaian(
-                    $id_alternatif,
-                    $id_kriteria[$i],
-                    $key
-                );
-
-            } else {
-
-                $this->Penilaian_model->edit_penilaian(
-                    $id_alternatif,
-                    $id_kriteria[$i],
-                    $key
-                );
-            }
-
-            $i++;
+            $this->db->update('penilaian', [
+                'nilai' => $nilai[$i]
+            ]);
         }
-        $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data berhasil diupdate!</div>');
-        redirect('penilaian');
+
+        redirect('Penilaian');
     }
 }
-

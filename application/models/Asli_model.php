@@ -1,11 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Asli_model extends CI_Model {
+class Asli_model extends CI_Model
+{
 
     public function get_all_data()
     {
-        return $this->db->get('asli')->result();
+        return $this->db
+            ->query("
+            SELECT *
+            FROM asli
+            ORDER BY CAST(SUBSTRING(kode_alternatif, 2) AS UNSIGNED) ASC
+        ")
+            ->result();
     }
 
     public function insert($data)

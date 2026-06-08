@@ -32,7 +32,7 @@
 				<div class="col-xl-6 col-lg-6 col-md-6 mt-5">
                     <div class="card bg-none o-hidden border-0 my-5 text-white" style="background: none;">
                         <div class="text-justify card-body p-0">
-                            <h4 style="font-weight: 800;">Sistem Pendukung Keputusan Penentuan Prioritas Pembangunan Kecamatan</h4>
+                            <h4 style="font-weight: 800;">Sistem Pendukung Keputusan Penentuan Prioritas Pembangunan Kecamatan Kabupaten Bantul</h4>
                             <p class="pt-4">
                                 Sistem Pendukung Keputusan (SPK) merupakan sistem berbasis komputer yang digunakan untuk membantu proses pengambilan keputusan secara objektif melalui pengolahan dan analisis data.
                             </p>

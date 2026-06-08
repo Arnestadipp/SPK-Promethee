@@ -1,93 +1,160 @@
 <?php
-    
-    defined('BASEPATH') OR exit('No direct script access allowed');
-    
-    class Kriteria extends CI_Controller {
-    
-        public function __construct()
-        {
-            parent::__construct();
-            $this->load->library('pagination');
-            $this->load->library('form_validation');
-            $this->load->model('Kriteria_model');
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-            if ($this->session->userdata('id_user_level') != "1") {
+class Kriteria extends CI_Controller
+{
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->load->library('pagination');
+        $this->load->library('form_validation');
+        $this->load->model('Kriteria_model');
+
+        if ($this->session->userdata('id_user_level') != "1") {
             ?>
-				<script type="text/javascript">
-                    alert('Anda tidak berhak mengakses halaman ini!');
-                    window.location='<?php echo base_url("Login/home"); ?>'
-                </script>
+            <script type="text/javascript">
+                alert('Anda tidak berhak mengakses halaman ini!');
+                window.location = '<?php echo base_url("Login/home"); ?>'
+            </script>
             <?php
-			}
         }
+    }
 
-        public function index()
-        {
-            $data['page'] = "Kriteria";
-			$data['list'] = $this->Kriteria_model->tampil();
-            $this->load->view('kriteria/index', $data);
-        }
-        
-        //menampilkan view create
-        public function create()
-        {
-			$data['page'] = "Kriteria";
-            $this->load->view('kriteria/create', $data);
-        }
+    /* ===============================
+       TAMPIL DATA
+    =============================== */
+    public function index()
+    {
+        $data['page'] = "Kriteria";
+        $data['list'] = $this->Kriteria_model->tampil();
 
-        //menambahkan data ke database
-        public function store()
-        {
-			$data = [
-				'keterangan' => $this->input->post('keterangan'),
-				'kode_kriteria' => $this->input->post('kode_kriteria'),
-			];
-			
-			$this->form_validation->set_rules('keterangan', 'Keterangan', 'required');
-			$this->form_validation->set_rules('kode_kriteria', 'Kode Kriteria', 'required');
+        $this->load->view('kriteria/index', $data);
+    }
 
-			if ($this->form_validation->run() != false) {
-				$result = $this->Kriteria_model->insert($data);
-				if ($result) {
-					$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data berhasil disimpan!</div>');
-					redirect('Kriteria');
-				}
-			} else {
-				$this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Data gagal disimpan!</div>');
-				redirect('Kriteria/create');
-				
-			}
-            
+    /* ===============================
+       FORM TAMBAH
+    =============================== */
+    public function create()
+    {
+        $data['page'] = "Kriteria";
 
-        }
+        $this->load->view('kriteria/create', $data);
+    }
 
-        public function edit($id_kriteria)
-        {
-            $data['page'] = "Kriteria";
-			$data['kriteria'] = $this->Kriteria_model->show($id_kriteria);
-            $this->load->view('kriteria/edit', $data);
-        }
-    
-        public function update($id_kriteria)
-        {
-            // TODO: implementasi update data berdasarkan $id_kriteria
-            $id_kriteria = $this->input->post('id_kriteria');
-            $data = array(
-                'keterangan' => $this->input->post('keterangan'),
-                'kode_kriteria' => $this->input->post('kode_kriteria'),
+    /* ===============================
+       SIMPAN DATA
+    =============================== */
+    public function store()
+    {
+
+        $this->form_validation->set_rules(
+            'kode_kriteria',
+            'Kode Kriteria',
+            'required'
+        );
+
+        $this->form_validation->set_rules(
+            'keterangan',
+            'Nama Kriteria',
+            'required'
+        );
+
+        if ($this->form_validation->run() == FALSE) {
+
+            $this->session->set_flashdata(
+                'message',
+                '<div class="alert alert-danger">
+                    Data gagal disimpan!
+                </div>'
             );
 
-            $this->Kriteria_model->update($id_kriteria, $data);
-            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data berhasil diupdate!</div>');
-			redirect('kriteria');
+            redirect('Kriteria/create');
         }
-    
-        public function destroy($id_kriteria)
-        {
-            $this->Kriteria_model->delete($id_kriteria);
-            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data berhasil dihapus!</div>');
-			redirect('kriteria');
-        }
-    
+
+        $data = [
+
+            'kode_kriteria' => $this->input->post('kode_kriteria'),
+            'keterangan' => $this->input->post('keterangan'),
+            'bobot_kriteria' => $this->input->post('bobot_kriteria'),
+            'sifat_kriteria' => $this->input->post('sifat_kriteria'),
+            'fungsi_preferensi' => $this->input->post('fungsi_preferensi')
+
+        ];
+
+        $this->Kriteria_model->insert($data);
+
+        $this->session->set_flashdata(
+            'message',
+            '<div class="alert alert-success">
+                Data berhasil disimpan!
+            </div>'
+        );
+
+        redirect('Kriteria');
     }
-    
+
+    /* ===============================
+       FORM EDIT
+    =============================== */
+    public function edit($id_kriteria)
+    {
+        $data['page'] = "Kriteria";
+
+        $data['kriteria'] = $this->Kriteria_model->show($id_kriteria);
+
+        $this->load->view('kriteria/edit', $data);
+    }
+
+    /* ===============================
+       UPDATE DATA
+    =============================== */
+    public function update($id_kriteria)
+    {
+
+        $id_kriteria = $this->input->post('id_kriteria');
+
+        $data = [
+
+            'kode_kriteria' => $this->input->post('kode_kriteria'),
+            'keterangan' => $this->input->post('keterangan'),
+            'bobot_kriteria' => $this->input->post('bobot_kriteria'),
+            'sifat_kriteria' => $this->input->post('sifat_kriteria'),
+            'fungsi_preferensi' => $this->input->post('fungsi_preferensi'),
+            'q' => $this->input->post('q'),
+            'p' => $this->input->post('p')
+
+        ];
+
+        $this->Kriteria_model->update($id_kriteria, $data);
+
+        $this->session->set_flashdata(
+            'message',
+            '<div class="alert alert-success">
+                Data berhasil diupdate!
+            </div>'
+        );
+
+        redirect('Kriteria');
+    }
+
+    /* ===============================
+       HAPUS DATA
+    =============================== */
+    public function destroy($id_kriteria)
+    {
+
+        $this->Kriteria_model->delete($id_kriteria);
+
+        $this->session->set_flashdata(
+            'message',
+            '<div class="alert alert-success">
+                Data berhasil dihapus!
+            </div>'
+        );
+
+        redirect('Kriteria');
+    }
+
+}

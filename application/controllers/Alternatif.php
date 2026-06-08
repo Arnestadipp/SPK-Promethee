@@ -4,16 +4,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Alternatif extends CI_Controller
 {
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->load->database();
-    }
-
     public function index()
     {
-        $data['list'] = $this->db->get('asli')->result();
+        $data['list'] = $this->db
+            ->query("
+            SELECT *
+            FROM asli
+            ORDER BY CAST(SUBSTRING(kode_alternatif,2) AS UNSIGNED) ASC
+        ")
+            ->result();
 
         $data['kriteria'] = $this->db
             ->order_by('id_kriteria', 'ASC')

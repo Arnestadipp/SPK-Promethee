@@ -13,7 +13,7 @@
     <div class="card-header py-3">
 
         <h6 class="m-0 font-weight-bold text-danger">
-            <i class="fa fa-table"></i> Daftar Data Alternatif
+            <i class="fa fa-table"></i> Data Alternatif (Hasil Preprocessing Data Asli)
         </h6>
 
     </div>
@@ -22,10 +22,7 @@
 
         <div class="table-responsive">
 
-            <table class="table table-bordered"
-                   id="dataTable"
-                   width="100%"
-                   cellspacing="0">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 
                 <thead class="bg-danger text-white">
 
@@ -44,154 +41,139 @@
 
                     <?php
                     $no = 1;
+                    foreach ($list as $value):
+                        ?>
 
-                    foreach($list as $value){
-                    ?>
+                        <tr align="center">
 
-                    <tr align="center">
+                            <td><?= $no++ ?></td>
+                            <td><?= $value->kode_alternatif ?></td>
+                            <td><?= $value->nama ?></td>
 
-                        <td><?= $no++ ?></td>
+                            <td>
 
-                        <td><?= $value->kode_alternatif ?></td>
-
-                        <td><?= $value->nama ?></td>
-
-                        <td>
-
-                            <button class="btn btn-info btn-sm"
-                                    data-toggle="modal"
+                                <button class="btn btn-info btn-sm" data-toggle="modal"
                                     data-target="#lihat<?= $value->id_asli ?>">
 
-                                <i class="fa fa-eye"></i> Lihat
+                                    <i class="fa fa-eye"></i> Lihat
 
-                            </button>
+                                </button>
 
-                        </td>
+                            </td>
 
-                    </tr>
+                        </tr>
 
-                    <!-- MODAL LIHAT -->
-                    <div class="modal fade"
-                         id="lihat<?= $value->id_asli ?>"
-                         tabindex="-1"
-                         role="dialog">
+                        <!-- ========================= -->
+                        <!-- MODAL LIHAT -->
+                        <!-- ========================= -->
+                        <div class="modal fade" id="lihat<?= $value->id_asli ?>" tabindex="-1">
 
-                        <div class="modal-dialog modal-lg"
-                             role="document">
+                            <div class="modal-dialog modal-lg">
 
-                            <div class="modal-content">
+                                <div class="modal-content">
 
-                                <div class="modal-header bg-info text-white">
+                                    <div class="modal-header bg-info text-white">
 
-                                    <h5 class="modal-title">
+                                        <h5 class="modal-title">
+                                            Data Alternatif - <?= $value->nama ?>
+                                        </h5>
 
-                                        Data Alternatif -
-                                        <?= $value->nama ?>
+                                        <button type="button" class="close text-white" data-dismiss="modal">
 
-                                    </h5>
+                                            <span>&times;</span>
 
-                                    <button type="button"
-                                            class="close text-white"
-                                            data-dismiss="modal">
+                                        </button>
 
-                                        <span>&times;</span>
+                                    </div>
 
-                                    </button>
+                                    <div class="modal-body">
 
-                                </div>
-
-                                <div class="modal-body">
-
-                                    <table class="table table-bordered">
-
-                                        <thead class="bg-light">
-
-                                            <tr align="center">
-
-                                                <th width="15%">Kode</th>
-                                                <th>Kriteria</th>
-                                                <th width="30%">Nilai Alternatif</th>
-
-                                            </tr>
-
-                                        </thead>
-
-                                        <tbody>
+                                        <?php foreach ($kriteria as $k): ?>
 
                                             <?php
-                                            foreach($kriteria as $k){
+                                            $data_nilai = $this->db
+                                                ->where('id_alternatif', $value->id_asli)
+                                                ->where('id_kriteria', $k->id_kriteria)
+                                                ->get('penilaian')
+                                                ->row();
 
-                                                $data_nilai = $this->db
-                                                    ->where('id_alternatif', $value->id_asli)
-                                                    ->where('id_kriteria', $k->id_kriteria)
-                                                    ->get('penilaian')
-                                                    ->row();
+                                            $nilai_asli = isset($data_nilai->nilai)
+                                                ? $data_nilai->nilai
+                                                : 0;
 
-                                                $nilai_asli = isset($data_nilai->nilai)
-                                                    ? $data_nilai->nilai
-                                                    : 0;
+                                            $hasil = 0;
+                                            $satuan = '';
+                                            ?>
 
-                                                $hasil = 0;
+                                            <!-- ========================= -->
+                                            <!-- PREPROCESSING RULE -->
+                                            <!-- ========================= -->
+                                            <?php if ($k->kode_kriteria == 'C1') { ?>
 
-                                                /*
-                                                C1 = dibagi 1000
-                                                C2 - C10 = proporsi %
-                                                */
+                                                <?php
+                                                // C1 = dibagi 1000
+                                                $hasil = $nilai_asli / 1000;
+                                                $satuan = 'ribu jiwa/km²';
+                                                ?>
 
-                                                if($k->kode_kriteria == 'C1'){
+                                            <?php } elseif ($k->kode_kriteria == 'C9' || $k->kode_kriteria == 'C10') { ?>
 
-                                                    $hasil = $nilai_asli / 1000;
-
-                                                    $satuan = ' ribu jiwa/km²';
+                                                <?php
+                                                // C9 & C10 = unit/1000 jiwa
+                                                if ($value->jumlah_penduduk > 0) {
+                                                    $hasil = (
+                                                        $nilai_asli /
+                                                        $value->jumlah_penduduk
+                                                    ) * 1000;
 
                                                 } else {
 
-                                                    if($value->jumlah_penduduk > 0){
-
-                                                        $hasil = ($nilai_asli / $value->jumlah_penduduk) * 100;
-
-                                                    }
-
-                                                    $satuan = ' %';
+                                                    $hasil = 0;
                                                 }
-                                            ?>
 
-                                            <tr>
+                                                $satuan = ' unit/1000 jiwa';
+                                                ?>
 
-                                                <td align="center">
-                                                    <?= $k->kode_kriteria ?>
-                                                </td>
+                                            <?php } else { ?>
 
-                                                <td>
-                                                    <?= $k->keterangan ?>
-                                                </td>
+                                                <?php
+                                                // C2 - C8 = persen
+                                                if ($value->jumlah_penduduk > 0) {
+                                                    $hasil = ($nilai_asli / $value->jumlah_penduduk) * 100;
+                                                } else {
+                                                    $hasil = 0;
+                                                }
 
-                                                <td align="center">
-
-                                                    <?= number_format($hasil, 4) ?>
-                                                    <?= $satuan ?>
-
-                                                </td>
-
-                                            </tr>
+                                                $satuan = ' %';
+                                                ?>
 
                                             <?php } ?>
 
-                                        </tbody>
+                                            <div class="form-group">
 
-                                    </table>
+                                                <label class="font-weight-bold">
+                                                    <?= $k->keterangan ?>
+                                                </label>
 
-                                </div>
+                                                <input type="text" class="form-control"
+                                                    value="<?= rtrim(rtrim(number_format($hasil, 3, '.', ''), '0'), '.') . $satuan ?>"
+                                                    readonly>
 
-                                <div class="modal-footer">
+                                            </div>
 
-                                    <button type="button"
-                                            class="btn btn-secondary"
-                                            data-dismiss="modal">
+                                        <?php endforeach; ?>
 
-                                        Tutup
+                                    </div>
 
-                                    </button>
+                                    <div class="modal-footer">
+
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+
+                                            Tutup
+
+                                        </button>
+
+                                    </div>
 
                                 </div>
 
@@ -199,9 +181,7 @@
 
                         </div>
 
-                    </div>
-
-                    <?php } ?>
+                    <?php endforeach; ?>
 
                 </tbody>
 
