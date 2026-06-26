@@ -69,48 +69,35 @@ class Perhitungan_model extends CI_Model
         $hasil = 0;
 
         /*
-        |----------------------------------------------------------------------
-        | C1 = kepadatan penduduk
-        | dibagi 1000
-        |----------------------------------------------------------------------
+        |--------------------------------------------------------------------------
+        | C1 = Kepadatan Penduduk
+        | Tidak dipreprocessing (tetap menggunakan data asli)
+        |--------------------------------------------------------------------------
         */
 
         if ($kriteria->kode_kriteria == 'C1') {
 
-            $hasil = $nilai_asli / 1000;
+            $hasil = $nilai_asli;
+
         }
 
         /*
-        |----------------------------------------------------------------------
-        | C9 & C10 = rasio per 1000 jiwa
-        |----------------------------------------------------------------------
-        */ elseif (
-            $kriteria->kode_kriteria == 'C9' ||
-            $kriteria->kode_kriteria == 'C10'
-        ) {
-
-            if ($alternatif->jumlah_penduduk > 0) {
-
-                $hasil = (
-                    $nilai_asli /
-                    $alternatif->jumlah_penduduk
-                ) * 1000;
-            }
-        }
-
-        /*
-        |----------------------------------------------------------------------
-        | C2 - C8 = persentase
-        |----------------------------------------------------------------------
+        |--------------------------------------------------------------------------
+        | C2 - C10 = Proporsi
+        | nilai indikator / jumlah penduduk
+        |--------------------------------------------------------------------------
         */ else {
 
             if ($alternatif->jumlah_penduduk > 0) {
 
-                $hasil = (
-                    $nilai_asli /
-                    $alternatif->jumlah_penduduk
-                ) * 100;
+                $hasil = $nilai_asli / $alternatif->jumlah_penduduk;
+
+            } else {
+
+                $hasil = 0;
+
             }
+
         }
 
         return $hasil;

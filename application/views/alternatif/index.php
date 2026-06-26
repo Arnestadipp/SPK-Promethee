@@ -111,53 +111,52 @@
                                             <?php if ($k->kode_kriteria == 'C1') { ?>
 
                                                 <?php
-                                                // C1 = dibagi 1000
-                                                $hasil = $nilai_asli / 1000;
-                                                $satuan = 'ribu jiwa/km²';
+                                                // C1 = tetap menggunakan data asli
+                                                $hasil = $nilai_asli;
+                                                $satuan = ' jiwa/km²';
                                                 ?>
 
                                             <?php } elseif ($k->kode_kriteria == 'C9' || $k->kode_kriteria == 'C10') { ?>
 
                                                 <?php
-                                                // C9 & C10 = unit/1000 jiwa
+                                                // C9 & C10 = proporsi fasilitas terhadap jumlah penduduk
                                                 if ($value->jumlah_penduduk > 0) {
-                                                    $hasil = (
-                                                        $nilai_asli /
-                                                        $value->jumlah_penduduk
-                                                    ) * 1000;
-
+                                                    $hasil = $nilai_asli / $value->jumlah_penduduk;
                                                 } else {
-
                                                     $hasil = 0;
                                                 }
 
-                                                $satuan = ' unit/1000 jiwa';
+                                                $satuan = '';
                                                 ?>
 
                                             <?php } else { ?>
 
                                                 <?php
-                                                // C2 - C8 = persen
+                                                // C2 - C8 = proporsi penduduk
                                                 if ($value->jumlah_penduduk > 0) {
-                                                    $hasil = ($nilai_asli / $value->jumlah_penduduk) * 100;
+                                                    $hasil = $nilai_asli / $value->jumlah_penduduk;
                                                 } else {
                                                     $hasil = 0;
                                                 }
 
-                                                $satuan = ' %';
+                                                $satuan = '';
                                                 ?>
 
                                             <?php } ?>
-
                                             <div class="form-group">
 
                                                 <label class="font-weight-bold">
                                                     <?= $k->keterangan ?>
                                                 </label>
 
-                                                <input type="text" class="form-control"
-                                                    value="<?= rtrim(rtrim(number_format($hasil, 3, '.', ''), '0'), '.') . $satuan ?>"
-                                                    readonly>
+                                                <input type="text" class="form-control" <?php
+                                                if ($k->kode_kriteria == 'C1') {
+                                                    $tampil = number_format($hasil, 0, '.', '');
+                                                } else {
+                                                    $tampil = number_format($hasil, 5, '.', '');
+                                                }
+                                                ?> <input type="text"
+                                                    class="form-control" value="<?= $tampil . $satuan ?>" readonly>
 
                                             </div>
 
